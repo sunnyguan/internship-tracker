@@ -8,11 +8,11 @@ export function Company({ company, highlight, click }) {
       onClick={click}
     >
       <div className="text-lg font-medium">{company.name}</div>
-      <div className="text-sm">
+      {/* <div className="text-sm">
         {company.actions.map((action) => (
           <p>{action}</p>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
