@@ -113,37 +113,39 @@ export function Dashboard() {
                       </div>
                     </div>
                     <div
+                      className="flex-1"
                       {...provided.droppableProps}
                       ref={provided.innerRef}
-                      className="grid grid-cols-1 gap-4"
                     >
-                      {Array.from(board[key]).map((company, id) => (
-                        <Draggable
-                          key={company.name}
-                          draggableId={company.name}
-                          index={id}
-                        >
-                          {(provided) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            >
-                              <Company
-                                company={company}
-                                highlight={selected[0].has(
-                                  company.name.toLowerCase()
-                                )}
-                                click={() => {
-                                  setModalCompany(company);
-                                  setShowModal(true);
-                                }}
-                              />
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
+                      <div className="grid grid-cols-1 gap-4">
+                        {Array.from(board[key]).map((company, id) => (
+                          <Draggable
+                            key={company.name}
+                            draggableId={company.name}
+                            index={id}
+                          >
+                            {(provided) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                              >
+                                <Company
+                                  company={company}
+                                  highlight={selected[0].has(
+                                    company.name.toLowerCase()
+                                  )}
+                                  click={() => {
+                                    setModalCompany(company);
+                                    setShowModal(true);
+                                  }}
+                                />
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>{" "}
                     </div>
                   </div>
                 )}
