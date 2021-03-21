@@ -16,7 +16,7 @@ const toLowerCaseSet = (list) => {
   return new Set(list.map((item) => item.toLowerCase()));
 };
 
-export const filterReturn = (board, match) => {
+export const filterReturn = (board, match, stage, date) => {
   let obj = { name: match, actions: [] };
   let deleted = false;
   Object.keys(board).forEach((group) => {
@@ -29,6 +29,7 @@ export const filterReturn = (board, match) => {
     );
     if (board[group].length !== initSize) deleted = true;
   });
+  obj.actions.push(`Moved to ${stage} on ${date}`);
   return [obj, deleted];
 };
 
@@ -54,7 +55,7 @@ const generateProcessed = (companies, stage) => {
   return processed;
 };
 
-const formatDate = (dateObj) => {
+export const formatDate = (dateObj) => {
   if (!dateObj) dateObj = new Date();
   else dateObj = new Date(dateObj.start);
   return dateObj.getUTCMonth() + 1 + "/" + dateObj.getUTCDate();
@@ -87,10 +88,8 @@ export const process = (text, enter, oldBoard) => {
       let removed = false;
       let added = false;
       companies.forEach((company) => {
-        let [obj, removedOne] = filterReturn(board, company);
+        let [obj, removedOne] = filterReturn(board, company, stage, date);
         removed |= removedOne;
-
-        obj.actions.push(`Moved to ${stage} on ${date}`);
         added |= addToStage(board, stage, obj);
       });
       if(removed || added) resetFlag = 2;

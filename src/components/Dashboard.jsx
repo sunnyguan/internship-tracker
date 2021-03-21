@@ -7,7 +7,7 @@ import { DATA } from "./data.js";
 import ls from "local-storage";
 import Modal from "react-modal";
 import ModalView from "./ModalView";
-import { process, addToStage, filterReturn } from "../utils/Parser";
+import { process, addToStage, filterReturn, formatDate } from "../utils/Parser";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 export function Dashboard() {
@@ -54,7 +54,7 @@ export function Dashboard() {
       let idx = result.destination.index;
       let name = result.draggableId;
       let newBoard = JSON.parse(JSON.stringify(board));
-      let obj = filterReturn(newBoard, name)[0];
+      let obj = filterReturn(newBoard, name, dst, formatDate())[0];
       addToStage(newBoard, dst, obj, idx);
       setBoard(newBoard);
       ls.set("board", newBoard);
@@ -115,7 +115,7 @@ export function Dashboard() {
                     <div
                       {...provided.droppableProps}
                       ref={provided.innerRef}
-                      className="grid grid-cols-1 gap-4 flex-1"
+                      className="grid grid-cols-1 gap-4"
                     >
                       {Array.from(board[key]).map((company, id) => (
                         <Draggable
