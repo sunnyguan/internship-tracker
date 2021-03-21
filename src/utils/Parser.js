@@ -17,7 +17,7 @@ const toLowerCaseSet = (list) => {
   return new Set(list.map((item) => item.toLowerCase()));
 };
 
-const filterReturn = (board, match) => {
+export const filterReturn = (board, match) => {
   let obj = { name: match, actions: [] };
   let deleted = false;
   Object.keys(board).forEach((group) => {
@@ -33,11 +33,11 @@ const filterReturn = (board, match) => {
   return [obj, deleted];
 };
 
-const addToStage = (board, stage, obj) => {
+export const addToStage = (board, stage, obj, idx = 0) => {
   let added = false;
   Object.keys(board).forEach((group) => {
     if (group.toLowerCase() === stage.toLowerCase()) {
-      board[group].push(obj);
+      board[group].splice(idx, 0, obj);
       added = true;
     }
   });
@@ -61,7 +61,8 @@ const formatDate = (dateObj) => {
   return dateObj.getUTCMonth() + 1 + "/" + dateObj.getUTCDate();
 };
 
-export const process = (text, enter, board) => {
+export const process = (text, enter, oldBoard) => {
+  let board = JSON.parse(JSON.stringify(oldBoard));
   let doc = nlp(text);
   let addMoveMatch = doc.match(addOrMoveMatch);
   let deleteMatch = doc.match(deleteMatcher);
@@ -111,5 +112,5 @@ export const process = (text, enter, board) => {
     resetFlag = 1;
   }
 
-  return [info, selected, resetFlag];
+  return [board, info, selected, resetFlag];
 };

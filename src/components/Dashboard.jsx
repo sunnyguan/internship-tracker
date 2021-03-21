@@ -7,7 +7,8 @@ import { DATA } from "./data.js";
 import ls from "local-storage";
 import Modal from "react-modal";
 import ModalView from "./ModalView";
-import { process } from "../utils/Parser";
+import { process, addToStage, filterReturn } from "../utils/Parser";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 export function Dashboard() {
   // eslint-disable-next-line
@@ -33,15 +34,29 @@ export function Dashboard() {
   const highlighter = (e) => {
     let text = e.target.value;
     let enter = e.key === "Enter";
-    let [info, selected, resetFlag] = process(text, enter, board);
+    let [board, info, selected, resetFlag] = process(text, enter, board);
     setInfo(info);
     setSelected(selected);
+    setBoard(board);
     if (resetFlag === 1 || resetFlag === 2) reset();
     if (resetFlag === 2) setInputValue("");
   };
 
   const handleChange = (e) => {
     setInputValue(e.target.value);
+  };
+
+  const handleOnDragEnd = (result) => {
+    // let src = result.source.droppableId;
+    if (!!result.destination) {
+      let dst = result.destination.droppableId;
+      let idx = result.destination.index;
+      let name = result.draggableId;
+      let newBoard = JSON.parse(JSON.stringify(board));
+      let obj = filterReturn(newBoard, name)[0];
+      addToStage(newBoard, dst, obj, idx);
+      setBoard(newBoard);
+    }
   };
 
   return (
@@ -70,34 +85,63 @@ export function Dashboard() {
       </div>
       <div className="">
         <div className="px-8 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 text-center">
-          {Object.keys(board).map((key) => (
-            <div
-              className={
-                "rounded-xl shadow-xl p-4 " +
-                (key.toLowerCase() === selected[1].toLowerCase()
-                  ? "bg-green-200"
-                  : "bg-blue-100")
-              }
-            >
-              <div className="flex">
-                <h1 className="text-2xl font-medium pb-4 flex-1 text-left">{key}</h1>
-                <h1 className="text-2xl ">{board[key].length}</h1>
-              </div>
+          <DragDropContext onDragEnd={handleOnDragEnd}>
+            {Object.keys(board).map((key) => (
+              <div
+                className={
+                  "rounded-xl shadow-xl p-4 " +
+                  (key.toLowerCase() === selected[1].toLowerCase()
+                    ? "bg-green-200"
+                    : "bg-blue-100")
+                }
+              >
+                <div className="flex">
+                  <h1 className="text-2xl font-medium pb-4 flex-1 text-left">
+                    {key}
+                  </h1>
+                  <h1 className="text-2xl ">{board[key].length}</h1>
+                </div>
 
-              <div className="grid grid-cols-1 gap-4">
-                {Array.from(board[key]).map((company) => (
-                  <Company
-                    company={company}
-                    highlight={selected[0].has(company.name.toLowerCase())}
-                    click={() => {
-                      setModalCompany(company);
-                      setShowModal(true);
-                    }}
-                  />
-                ))}
+                <Droppable droppableId={key}>
+                  {(provided) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className="grid grid-cols-1 gap-4"
+                    >
+                      {Array.from(board[key]).map((company, id) => (
+                        <Draggable
+                          key={company.name}
+                          draggableId={company.name}
+                          index={id}
+                        >
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <Company
+                                company={company}
+                                highlight={selected[0].has(
+                                  company.name.toLowerCase()
+                                )}
+                                click={() => {
+                                  setModalCompany(company);
+                                  setShowModal(true);
+                                }}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
               </div>
-            </div>
-          ))}
+            ))}
+          </DragDropContext>
         </div>
       </div>
     </>
