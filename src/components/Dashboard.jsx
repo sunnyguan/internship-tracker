@@ -4,10 +4,11 @@ import nlp from "compromise";
 import nlpdates from "compromise-dates";
 import nlpnumbers from "compromise-numbers";
 import { DATA } from "./data.js";
+import ls from "local-storage";
 
 export function Dashboard() {
   // eslint-disable-next-line
-  const [board, setBoard] = useState(DATA);
+  const [board, setBoard] = useState(ls.get("board") || DATA);
 
   useEffect(() => {
     nlp.extend(nlpdates);
@@ -43,14 +44,18 @@ export function Dashboard() {
     let date = dateObj.getUTCMonth() + 1 + "/" + dateObj.getUTCDate();
 
     if (addMoveMatch.text() !== "") {
-      let companies = addMoveMatch.groups("company").text().split(",").map(item => item.trim());
+      let companies = addMoveMatch
+        .groups("company")
+        .text()
+        .split(",")
+        .map((item) => item.trim());
       let stage = addMoveMatch.groups("stage").text();
       let processed = "";
       companies.forEach((comp) => {
         processed += `<span class='bg-indigo-300 px-2 py-1 rounded-md shadow-md mx-1'>${comp}</span>`;
       });
       processed += ` to 
-        <span class='bg-green-300 px-2 py-1 rounded-md shadow-md'>${stage}</span>
+        <span class='bg-green-200 px-2 py-1 rounded-md shadow-md'>${stage}</span>
       `;
       setSelected([toLowerCaseSet(companies), stage]);
       console.log(selected[0]);
@@ -79,6 +84,7 @@ export function Dashboard() {
               added = true;
             }
           });
+          ls.set("board", board);
         });
         if (removed || added) {
           setInputValue("");
@@ -100,11 +106,13 @@ export function Dashboard() {
           );
           if (board[group].length !== size1) removed = true;
         });
+        ls.set("board", board);
         if (removed) setInputValue("");
       }
     } else {
       if (info !== "") setInfo("");
-      if (selected[0] !== "" || selected[1] !== "") setSelected([new Set(), ""]);
+      if (selected[0] !== "" || selected[1] !== "")
+        setSelected([new Set(), ""]);
     }
   };
 
@@ -138,7 +146,7 @@ export function Dashboard() {
               className={
                 "rounded-xl shadow-xl p-4 " +
                 (key.toLowerCase() === selected[1].toLowerCase()
-                  ? "bg-green-300"
+                  ? "bg-green-200"
                   : "bg-blue-100")
               }
             >
@@ -147,9 +155,7 @@ export function Dashboard() {
                 {Array.from(board[key]).map((company) => (
                   <Company
                     company={company}
-                    highlight={
-                      selected[0].has(company.name.toLowerCase())
-                    }
+                    highlight={selected[0].has(company.name.toLowerCase())}
                   />
                 ))}
               </div>
