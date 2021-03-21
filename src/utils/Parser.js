@@ -16,10 +16,17 @@ const toLowerCaseSet = (list) => {
   return new Set(list.map((item) => item.toLowerCase()));
 };
 
-export const filterReturn = (board, match, stage, date) => {
+export const filterReturn = (
+  board,
+  match,
+  stage = "n/a",
+  date = new Date()
+) => {
   let obj = { name: match, actions: [] };
+  let stageName = stage;
   let deleted = false;
   Object.keys(board).forEach((group) => {
+    if (group.toLowerCase() === stage.toLowerCase()) stageName = group;
     board[group].forEach((item) => {
       if (item.name.toLowerCase() === match.toLowerCase()) obj = item;
     });
@@ -29,7 +36,7 @@ export const filterReturn = (board, match, stage, date) => {
     );
     if (board[group].length !== initSize) deleted = true;
   });
-  obj.actions.push(`Moved to ${stage} on ${date}`);
+  if (stage !== "n/a") obj.actions.push({ stage: stageName, date: date });
   return [obj, deleted];
 };
 
@@ -44,21 +51,40 @@ export const addToStage = (board, stage, obj, idx = 0) => {
   return added;
 };
 
-const generateProcessed = (companies, stage) => {
+const generateProcessed = (companies, stage, date) => {
   let processed = "";
   companies.forEach((comp) => {
     processed += `<span class='bg-indigo-300 px-2 py-1 rounded-md shadow-md mx-1'>${comp}</span>`;
   });
   processed += ` to 
     <span class='bg-green-200 px-2 py-1 rounded-md shadow-md'>${stage}</span>
+    on
+    <span class='bg-yellow-200 px-2 py-1 rounded-md shadow-md'>${formatDate(
+      date
+    )}</span>
   `;
   return processed;
 };
 
-export const formatDate = (dateObj) => {
-  if (!dateObj) dateObj = new Date();
-  else dateObj = new Date(dateObj.start);
-  return dateObj.getUTCMonth() + 1 + "/" + dateObj.getUTCDate();
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+export const formatDate = (dateString) => {
+  let dateObj = new Date(dateString);
+  let str = monthNames[dateObj.getUTCMonth()] + " " + dateObj.getUTCDate();
+  return str;
 };
 
 export const process = (text, enter, oldBoard) => {
@@ -66,9 +92,6 @@ export const process = (text, enter, oldBoard) => {
   let doc = nlp(text);
   let addMoveMatch = doc.match(addOrMoveMatch);
   let deleteMatch = doc.match(deleteMatcher);
-
-  let dateObj = doc.dates().get(0);
-  let date = formatDate(dateObj);
 
   let info = "";
   let selected = [new Set(), ""];
@@ -81,7 +104,11 @@ export const process = (text, enter, oldBoard) => {
       .split(",")
       .map((item) => item.trim());
     let stage = addMoveMatch.groups("stage").text();
-    info = generateProcessed(companies, stage);
+    let dateObj = doc.dates().get(0);
+    let date = new Date().toISOString();
+    if (!!dateObj) date = new Date(dateObj.start).toISOString();
+
+    info = generateProcessed(companies, stage, date);
     selected = [toLowerCaseSet(companies), stage];
 
     if (enter) {
@@ -92,7 +119,7 @@ export const process = (text, enter, oldBoard) => {
         removed |= removedOne;
         added |= addToStage(board, stage, obj);
       });
-      if(removed || added) resetFlag = 2;
+      if (removed || added) resetFlag = 2;
     }
   } else if (deleteMatch.text() !== "") {
     let company = deleteMatch.groups("company").text();

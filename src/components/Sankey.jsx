@@ -2,7 +2,7 @@ import Chart from "react-google-charts";
 
 export function Sankey({ board }) {
   const extract = (text) => {
-    return text.split("to ")[1].split(" on")[0].toLowerCase();
+    return text.stage.toLowerCase();
   };
 
   const order = {

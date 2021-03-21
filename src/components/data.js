@@ -2,30 +2,37 @@ export const DATA = {
   Applied: [
     {
       name: "IMC",
-      actions: ["Moved to Applied on 3/16"],
+      actions: [{ stage: "Applied", date: "2021-02-21T21:24:24.733Z" }],
     },
   ],
   OA: [
     {
       name: "DRW",
-      actions: ["Moved to Applied on 2/10", "Moved to OA on 2/12"],
+      actions: [
+        { stage: "Applied", date: "2021-02-21T21:24:24.733Z" },
+        { stage: "OA", date: "2021-02-25T21:24:24.733Z" },
+      ],
     },
   ],
   Phone: [],
   Final: [
     {
       name: "Citadel",
-      actions: ["Moved to Applied on 3/20", "Moved to Final on 3/21"],
+      actions: [
+        { stage: "Applied", date: "2021-02-27T21:24:24.733Z" },
+        { stage: "OA", date: "2021-03-01T21:24:24.733Z" },
+        { stage: "Final", date: "2021-03-05T21:24:24.733Z" },
+      ],
     },
   ],
   Offer: [
     {
       name: "HRT",
       actions: [
-        "Moved to Applied on 3/10",
-        "Moved to OA on 3/15",
-        "Moved to Final on 3/20",
-        "Moved to Offer on 3/22",
+        { stage: "Applied", date: "2021-01-21T21:24:24.733Z" },
+        { stage: "OA", date: "2021-02-21T21:24:24.733Z" },
+        { stage: "Final", date: "2021-03-01T21:24:24.733Z" },
+        { stage: "Offer", date: "2021-03-11T21:24:24.733Z" },
       ],
     },
   ],

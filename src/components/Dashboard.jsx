@@ -7,14 +7,16 @@ import { DATA } from "./data.js";
 import ls from "local-storage";
 import Modal from "react-modal";
 import ModalView from "./ModalView";
-import { process, addToStage, filterReturn, formatDate } from "../utils/Parser";
+import { process, addToStage, filterReturn} from "../utils/Parser";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Sankey } from "./Sankey";
 import CommandInput from "./CommandInput";
+import Timeline from './Timeline';
 
 export function Dashboard() {
   // eslint-disable-next-line
-  const [board, setBoard] = useState(ls.get("board") || DATA);
+  const [board, setBoard] = useState(DATA);
+  // change above line to enable cache
   const [showModal, setShowModal] = useState(false);
   const [modalCompany, setModalCompany] = useState({ name: "", actions: [] });
   const [selected, setSelected] = useState([new Set(), ""]);
@@ -59,7 +61,7 @@ export function Dashboard() {
       let idx = result.destination.index;
       let name = result.draggableId;
       let newBoard = JSON.parse(JSON.stringify(board));
-      let obj = filterReturn(newBoard, name, dst, formatDate())[0];
+      let obj = filterReturn(newBoard, name, dst, new Date())[0];
       addToStage(newBoard, dst, obj, idx);
       setBoard(newBoard);
       ls.set("board", newBoard);
@@ -148,6 +150,7 @@ export function Dashboard() {
         </div>
       </div>
       <Sankey board={board} />
+      <Timeline board={board} />
     </>
   );
 }

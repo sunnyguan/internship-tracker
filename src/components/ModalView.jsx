@@ -3,14 +3,15 @@ import {
   VerticalTimelineElement,
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
+import { formatDate } from "../utils/Parser";
 import "./VerticalTimeline.css";
 
 export default function ModalView({ company, setShowModal }) {
   const process = (text) => {
     return `Moved to <span class="bg-blue-300 px-2 py-1 rounded-md shadow-md mx-1">${
-      text.split("Moved to ")[1].split(" on")[0]
+      text.stage
     }</span> on <span class="bg-indigo-300 px-2 py-1 rounded-md shadow-md mx-1">${
-      text.split(" on")[1]
+      formatDate(text.date)
     }</span>`;
   };
 
@@ -44,10 +45,10 @@ export default function ModalView({ company, setShowModal }) {
           <VerticalTimelineElement
             contentStyle={{ background: "rgb(33, 150, 243)", color: "#111" }}
             contentArrowStyle={{ borderRight: "7px solid  rgb(33, 150, 243)" }}
-            date={action.split("on ")[1]}
+            date={formatDate(action.date)}
             iconStyle={{ background: "rgb(33, 150, 243)", color: "#fff" }}
           >
-            <h3 className="vertical-timeline-element-title">{action}</h3>
+            <h3 className="vertical-timeline-element-title">Moved to {action.stage}</h3>
           </VerticalTimelineElement>
         ))}
 
