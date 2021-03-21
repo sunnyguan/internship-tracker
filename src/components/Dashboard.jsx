@@ -148,7 +148,7 @@ export function Dashboard() {
         <input
           contentEditable="true"
           className="mt-4 ring-blue-200 mr-4 py-2 px-4 rounded-lg placeholder-gray-400 text-gray-900 inline-block shadow-md focus:outline-none ring-2 focus:ring-blue-600 w-full bg-white text-center"
-          placeholder="Enter updates here..."
+          placeholder="Try 'move IMC to offer on mar 20'"
           onKeyUp={highlighter}
           onChange={handleChange}
           value={inputValue}
