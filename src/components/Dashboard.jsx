@@ -14,9 +14,29 @@ import CommandInput from "./CommandInput";
 import Timeline from "./Timeline";
 
 export function Dashboard() {
-  // eslint-disable-next-line
-  const [board, setBoard] = useState(DATA);
-  // change above line to enable cache
+  console.log(ls);
+
+  const getValidBoard = () => {
+    let lsBoard = ls.get("board");
+    try {
+      Object.keys(lsBoard).forEach((stage) => {
+        lsBoard[stage].forEach((company) => {
+          company.actions.forEach((action) => {
+            let date = action.date;
+            let stage = action.stage;
+            if (!date || !stage) {
+              ls.set("board", DATA);
+            }
+          });
+        });
+      });
+    } catch (e) {
+      ls.set("board", DATA);
+    }
+    return ls.get("board");
+  };
+
+  const [board, setBoard] = useState(getValidBoard());
   const [showModal, setShowModal] = useState(false);
   const [modalCompany, setModalCompany] = useState({ name: "", actions: [] });
   const [selected, setSelected] = useState([new Set(), ""]);
