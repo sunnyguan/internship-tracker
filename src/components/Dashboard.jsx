@@ -5,10 +5,14 @@ import nlpdates from "compromise-dates";
 import nlpnumbers from "compromise-numbers";
 import { DATA } from "./data.js";
 import ls from "local-storage";
+import Modal from "react-modal";
+import ModalView from "./ModalView";
 
 export function Dashboard() {
   // eslint-disable-next-line
   const [board, setBoard] = useState(ls.get("board") || DATA);
+  const [showModal, setShowModal] = useState(false);
+  const [modalCompany, setModalCompany] = useState({ name: "", actions: [] });
 
   useEffect(() => {
     nlp.extend(nlpdates);
@@ -134,6 +138,12 @@ export function Dashboard() {
       <div className="text-center text-4xl mt-8 font-light tracking-wide">
         Dashboard
       </div>
+      <Modal
+        isOpen={showModal}
+        className="bg-white border-2 border-gray-400 absolute top-10 right-10 left-10 bottom-10 rounded-md outline-none overflow-y-scroll overflow-x-hidden"
+      >
+        <ModalView company={modalCompany} setShowModal={setShowModal} />
+      </Modal>
       <div className="px-8 header text-center mb-4">
         <input
           contentEditable="true"
@@ -165,6 +175,10 @@ export function Dashboard() {
                   <Company
                     company={company}
                     highlight={selected[0].has(company.name.toLowerCase())}
+                    click={() => {
+                      setModalCompany(company);
+                      setShowModal(true);
+                    }}
                   />
                 ))}
               </div>
