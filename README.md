@@ -1,7 +1,5 @@
 # Internship Tracker
 
-![demo](https://user-images.githubusercontent.com/19920441/111924102-f7de4f80-8a5f-11eb-891f-9c6229672484.mov)
-
 Helps track your internship applications. Deployed on https://internship-tracker.netlify.app
 
 ## Features
