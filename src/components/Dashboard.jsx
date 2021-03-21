@@ -15,7 +15,7 @@ export function Dashboard() {
     console.log(nlp);
   }, []);
 
-  const [selected, setSelected] = useState(["", ""]);
+  const [selected, setSelected] = useState([new Set(), ""]);
   const [inputValue, setInputValue] = useState("");
 
   const keys = ["applied", "oa", "phone", "final", "offer", "rejected"];
@@ -27,6 +27,9 @@ export function Dashboard() {
 
   const deleteMatcher = `(remove|delete) [<company>.+]`;
 
+  const toLowerCaseSet = (list) => {
+    return new Set(list.map((item) => item.toLowerCase()));
+  };
   const highlighter = (e) => {
     let text = e.target.value;
     console.log(text);
@@ -40,35 +43,42 @@ export function Dashboard() {
     let date = dateObj.getUTCMonth() + 1 + "/" + dateObj.getUTCDate();
 
     if (addMoveMatch.text() !== "") {
-      let company = addMoveMatch.groups("company").text();
+      let companies = addMoveMatch.groups("company").text().split(",").map(item => item.trim());
       let stage = addMoveMatch.groups("stage").text();
-      let processed = `
-        <span class='bg-indigo-300 px-2 py-1 rounded-md shadow-md'>${company}</span>
-          to
+      let processed = "";
+      companies.forEach((comp) => {
+        processed += `<span class='bg-indigo-300 px-2 py-1 rounded-md shadow-md mx-1'>${comp}</span>`;
+      });
+      processed += ` to 
         <span class='bg-green-300 px-2 py-1 rounded-md shadow-md'>${stage}</span>
       `;
-      setSelected([company, stage]);
+      setSelected([toLowerCaseSet(companies), stage]);
+      console.log(selected[0]);
+      console.log(board);
       setInfo(processed);
+
       if (e.key === "Enter") {
         let removed = false;
         let added = false;
-        let obj = { name: company, actions: [] };
-        Object.keys(board).forEach((group) => {
-          board[group].forEach((item) => {
-            if (item.name.toLowerCase() === company.toLowerCase()) {
-              obj = item;
+        companies.forEach((company) => {
+          let obj = { name: company, actions: [] };
+          Object.keys(board).forEach((group) => {
+            board[group].forEach((item) => {
+              if (item.name.toLowerCase() === company.toLowerCase()) {
+                obj = item;
+              }
+            });
+            board[group] = board[group].filter(
+              (item) => item.name.toLowerCase() !== company.toLowerCase()
+            );
+          });
+          obj.actions.push(`Moved to ${stage} on ${date}`);
+          Object.keys(board).forEach((group) => {
+            if (group.toLowerCase() === stage.toLowerCase()) {
+              board[group].push(obj);
+              added = true;
             }
           });
-          board[group] = board[group].filter(
-            (item) => item.name.toLowerCase() !== company.toLowerCase()
-          );
-        });
-        obj.actions.push(`Moved to ${stage} on ${date}`);
-        Object.keys(board).forEach((group) => {
-          if (group.toLowerCase() === stage.toLowerCase()) {
-            board[group].push(obj);
-            added = true;
-          }
         });
         if (removed || added) {
           setInputValue("");
@@ -79,7 +89,7 @@ export function Dashboard() {
       let processed = `
         delete <span class='bg-indigo-300 px-2 py-1 rounded-md shadow-md'>${company}</span>
       `;
-      setSelected([company, ""]);
+      setSelected([new Set([company]), ""]);
       setInfo(processed);
       if (e.key === "Enter") {
         let removed = false;
@@ -94,7 +104,7 @@ export function Dashboard() {
       }
     } else {
       if (info !== "") setInfo("");
-      if (selected[0] !== "" || selected[1] !== "") setSelected(["", ""]);
+      if (selected[0] !== "" || selected[1] !== "") setSelected([new Set(), ""]);
     }
   };
 
@@ -138,7 +148,7 @@ export function Dashboard() {
                   <Company
                     company={company}
                     highlight={
-                      company.name.toLowerCase() === selected[0].toLowerCase()
+                      selected[0].has(company.name.toLowerCase())
                     }
                   />
                 ))}
