@@ -9,6 +9,7 @@ import Modal from "react-modal";
 import ModalView from "./ModalView";
 import { process, addToStage, filterReturn, formatDate } from "../utils/Parser";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { Sankey } from "./Sankey";
 
 export function Dashboard() {
   // eslint-disable-next-line
@@ -154,6 +155,7 @@ export function Dashboard() {
           </DragDropContext>
         </div>
       </div>
+      <Sankey board={board} />
     </>
   );
 }
