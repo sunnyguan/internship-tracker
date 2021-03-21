@@ -37,7 +37,6 @@ function Timeline({ board }) {
         }
       });
     });
-    console.log(data);
     return data;
   };
 

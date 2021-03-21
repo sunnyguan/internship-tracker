@@ -1,5 +1,4 @@
 export function Company({ company, highlight, click }) {
-  console.log("redrawing...");
   return (
     <div
       className={

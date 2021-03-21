@@ -7,11 +7,11 @@ import { DATA } from "./data.js";
 import ls from "local-storage";
 import Modal from "react-modal";
 import ModalView from "./ModalView";
-import { process, addToStage, filterReturn} from "../utils/Parser";
+import { process, addToStage, filterReturn } from "../utils/Parser";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Sankey } from "./Sankey";
 import CommandInput from "./CommandInput";
-import Timeline from './Timeline';
+import Timeline from "./Timeline";
 
 export function Dashboard() {
   // eslint-disable-next-line
