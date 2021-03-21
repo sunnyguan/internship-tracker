@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Company } from "./Company";
 import nlp from "compromise";
+import nlpdates from "compromise-dates";
+import nlpnumbers from "compromise-numbers";
+import { DATA } from "./data.js";
 
 export function Dashboard() {
   // eslint-disable-next-line
-  const [board, setBoard] = useState({
-    Applied: new Set(["IMC", "Bridgewater"]),
-    OA: new Set(["Amazon", "Apple"]),
-    Phone: new Set(["Facebook", "Google"]),
-    Final: new Set(["Netflix"]),
-    Offer: new Set(["Virtu"]),
-    Rejected: new Set(["Whole Foods"]),
-  });
+  const [board, setBoard] = useState(DATA);
+
+  useEffect(() => {
+    nlp.extend(nlpdates);
+    nlp.extend(nlpnumbers);
+    console.log(nlp);
+  }, []);
 
   const [selected, setSelected] = useState(["", ""]);
   const [inputValue, setInputValue] = useState("");
@@ -32,6 +34,11 @@ export function Dashboard() {
     let addMoveMatch = doc.match(addOrMoveMatch);
     let deleteMatch = doc.match(deleteMatcher);
 
+    let dateObj = doc.dates().get(0);
+    if (!dateObj) dateObj = new Date();
+    else dateObj = new Date(dateObj.start);
+    let date = dateObj.getUTCMonth() + 1 + "/" + dateObj.getUTCDate();
+
     if (addMoveMatch.text() !== "") {
       let company = addMoveMatch.groups("company").text();
       let stage = addMoveMatch.groups("stage").text();
@@ -45,20 +52,21 @@ export function Dashboard() {
       if (e.key === "Enter") {
         let removed = false;
         let added = false;
-        let capName = "";
+        let obj = { name: company, actions: [] };
         Object.keys(board).forEach((group) => {
           board[group].forEach((item) => {
-            if (item.toLowerCase() === company.toLowerCase()) {
-              board[group].delete(item);
-              capName = item;
-              removed = true;
+            if (item.name.toLowerCase() === company.toLowerCase()) {
+              obj = item;
             }
           });
+          board[group] = board[group].filter(
+            (item) => item.name.toLowerCase() !== company.toLowerCase()
+          );
         });
+        obj.actions.push(`Moved to ${stage} on ${date}`);
         Object.keys(board).forEach((group) => {
           if (group.toLowerCase() === stage.toLowerCase()) {
-            if (capName !== "") board[group].add(capName);
-            else board[group].add(company);
+            board[group].push(obj);
             added = true;
           }
         });
@@ -76,12 +84,11 @@ export function Dashboard() {
       if (e.key === "Enter") {
         let removed = false;
         Object.keys(board).forEach((group) => {
-          board[group].forEach((item) => {
-            if (item.toLowerCase() === company.toLowerCase()) {
-              board[group].delete(item);
-              removed = true;
-            }
-          });
+          let size1 = board[group].length;
+          board[group] = board[group].filter(
+            (item) => item.name.toLowerCase() !== company.toLowerCase()
+          );
+          if (board[group].length !== size1) removed = true;
         });
         if (removed) setInputValue("");
       }
@@ -129,9 +136,9 @@ export function Dashboard() {
               <div className="grid grid-cols-1 gap-4">
                 {Array.from(board[key]).map((company) => (
                   <Company
-                    name={company}
+                    company={company}
                     highlight={
-                      company.toLowerCase() === selected[0].toLowerCase()
+                      company.name.toLowerCase() === selected[0].toLowerCase()
                     }
                   />
                 ))}
