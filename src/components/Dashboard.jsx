@@ -31,6 +31,13 @@ export function Dashboard() {
   const toLowerCaseSet = (list) => {
     return new Set(list.map((item) => item.toLowerCase()));
   };
+
+  const reset = () => {
+    if (info !== "") setInfo("");
+    if (selected[0].size !== 0 || selected[1] !== "")
+      setSelected([new Set(), ""]);
+  };
+
   const highlighter = (e) => {
     let text = e.target.value;
     console.log(text);
@@ -88,6 +95,7 @@ export function Dashboard() {
         });
         if (removed || added) {
           setInputValue("");
+          reset();
         }
       }
     } else if (deleteMatch.text() !== "") {
@@ -107,12 +115,13 @@ export function Dashboard() {
           if (board[group].length !== size1) removed = true;
         });
         ls.set("board", board);
-        if (removed) setInputValue("");
+        if (removed) {
+          setInputValue("");
+          reset();
+        }
       }
     } else {
-      if (info !== "") setInfo("");
-      if (selected[0] !== "" || selected[1] !== "")
-        setSelected([new Set(), ""]);
+      reset();
     }
   };
 
