@@ -1,4 +1,4 @@
-# Intership Tracker
+# Internship Tracker
 
 Helps track your internship applications. Deployed on https://internship-tracker.netlify.app
 
