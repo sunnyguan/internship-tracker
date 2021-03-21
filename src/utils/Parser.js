@@ -1,7 +1,6 @@
 import nlp from "compromise";
 import nlpdates from "compromise-dates";
 import nlpnumbers from "compromise-numbers";
-import ls from "local-storage";
 
 nlp.extend(nlpdates);
 nlp.extend(nlpnumbers);
@@ -93,7 +92,6 @@ export const process = (text, enter, oldBoard) => {
 
         obj.actions.push(`Moved to ${stage} on ${date}`);
         added |= addToStage(board, stage, obj);
-        ls.set("board", board);
       });
       if(removed || added) resetFlag = 2;
     }
@@ -105,7 +103,6 @@ export const process = (text, enter, oldBoard) => {
     selected = [new Set([company]), ""];
     if (enter) {
       let removed = filterReturn(board, company)[1];
-      ls.set("board", board);
       if (removed) resetFlag = 2;
     }
   } else {

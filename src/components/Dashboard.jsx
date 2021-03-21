@@ -38,6 +38,7 @@ export function Dashboard() {
     setInfo(info);
     setSelected(selected);
     setBoard(board);
+    ls.set("board", board);
     if (resetFlag === 1 || resetFlag === 2) reset();
     if (resetFlag === 2) setInputValue("");
   };
@@ -56,6 +57,7 @@ export function Dashboard() {
       let obj = filterReturn(newBoard, name)[0];
       addToStage(newBoard, dst, obj, idx);
       setBoard(newBoard);
+      ls.set("board", newBoard);
     }
   };
 
