@@ -10,6 +10,7 @@ import ModalView from "./ModalView";
 import { process, addToStage, filterReturn, formatDate } from "../utils/Parser";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Sankey } from "./Sankey";
+import CommandInput from "./CommandInput";
 
 export function Dashboard() {
   // eslint-disable-next-line
@@ -17,8 +18,6 @@ export function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [modalCompany, setModalCompany] = useState({ name: "", actions: [] });
   const [selected, setSelected] = useState([new Set(), ""]);
-  const [inputValue, setInputValue] = useState("");
-  const [info, setInfo] = useState("");
 
   useEffect(() => {
     nlp.extend(nlpdates);
@@ -27,7 +26,6 @@ export function Dashboard() {
   }, []);
 
   const reset = () => {
-    if (info !== "") setInfo("");
     if (selected[0].size !== 0 || selected[1] !== "")
       setSelected([new Set(), ""]);
   };
@@ -35,17 +33,23 @@ export function Dashboard() {
   const highlighter = (e) => {
     let text = e.target.value;
     let enter = e.key === "Enter";
-    let [newBoard, info, selected, resetFlag] = process(text, enter, board);
-    setInfo(info);
-    setSelected(selected);
-    setBoard(newBoard);
-    ls.set("board", newBoard);
-    if (resetFlag === 1 || resetFlag === 2) reset();
-    if (resetFlag === 2) setInputValue("");
-  };
-
-  const handleChange = (e) => {
-    setInputValue(e.target.value);
+    let [newBoard, newInfo, newSelected, resetFlag] = process(
+      text,
+      enter,
+      board
+    );
+    if (resetFlag === 0) {
+      setSelected(newSelected);
+    }
+    if (resetFlag === 2) {
+      setSelected(newSelected);
+      setBoard(newBoard);
+      ls.set("board", newBoard);
+    }
+    if (resetFlag !== 0) {
+      reset();
+    }
+    return [newInfo, resetFlag];
   };
 
   const handleOnDragEnd = (result) => {
@@ -80,21 +84,9 @@ export function Dashboard() {
       >
         <ModalView company={modalCompany} setShowModal={setShowModal} />
       </Modal>
-      <div className="px-8 header text-center mb-4">
-        <input
-          className="mt-4 ring-blue-200 mr-4 py-2 px-4 rounded-lg placeholder-gray-400 text-gray-900 inline-block shadow-md focus:outline-none ring-2 focus:ring-blue-600 w-full bg-white text-center"
-          placeholder="Try 'move IMC to offer on mar 20'"
-          onKeyUp={highlighter}
-          onChange={handleChange}
-          value={inputValue}
-        />
-        <div
-          className="p-4 h-16"
-          dangerouslySetInnerHTML={{ __html: info }}
-        ></div>
-      </div>
+      <CommandInput highlighter={highlighter} />
       <div className="">
-        <div className="px-8 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 text-center">
+        <div className="px-8 grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4 text-center">
           <DragDropContext onDragEnd={handleOnDragEnd}>
             {Object.keys(board).map((key) => (
               <Droppable droppableId={key}>
@@ -118,7 +110,7 @@ export function Dashboard() {
                       {...provided.droppableProps}
                       ref={provided.innerRef}
                     >
-                      <div className="grid grid-cols-1 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {Array.from(board[key]).map((company, id) => (
                           <Draggable
                             key={company.name}

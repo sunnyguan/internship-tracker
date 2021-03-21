@@ -20,7 +20,7 @@ export default function ModalView({ company, setShowModal }) {
         onClick={() => {
           setShowModal(false);
         }}
-        className="m-4 bg-blue-300 px-4 py-2 rounded-xl shadow-md cursor-pointer hover:bg-blue-400"
+        className="m-4 bg-blue-300 px-4 py-2 rounded-xl shadow-md cursor-pointer hover:bg-blue-400 outline-none focus:outline-none"
       >
         Close Modal
       </button>
