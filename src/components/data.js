@@ -1,40 +1,91 @@
 export const DATA = {
-  Applied: [
-    {
-      name: "IMC",
-      actions: [{ stage: "Applied", date: "2021-02-21T21:24:24.733Z" }],
-    },
-  ],
-  OA: [
-    {
-      name: "DRW",
-      actions: [
-        { stage: "Applied", date: "2021-02-21T21:24:24.733Z" },
-        { stage: "OA", date: "2021-02-25T21:24:24.733Z" },
-      ],
-    },
-  ],
+  Applied: [],
+  OA: [],
   Phone: [],
-  Final: [
-    {
-      name: "Citadel",
-      actions: [
-        { stage: "Applied", date: "2021-02-27T21:24:24.733Z" },
-        { stage: "OA", date: "2021-03-01T21:24:24.733Z" },
-        { stage: "Final", date: "2021-03-05T21:24:24.733Z" },
-      ],
-    },
-  ],
+  Final: [],
   Offer: [
     {
-      name: "HRT",
+      name: "Facebook",
       actions: [
-        { stage: "Applied", date: "2021-01-21T21:24:24.733Z" },
-        { stage: "OA", date: "2021-02-21T21:24:24.733Z" },
-        { stage: "Final", date: "2021-03-01T21:24:24.733Z" },
-        { stage: "Offer", date: "2021-03-11T21:24:24.733Z" },
+        {
+          stage: "Applied",
+          date: "2021-01-21T08:00:00.000Z",
+        },
+        {
+          stage: "Phone",
+          date: "2021-03-17T07:00:00.000Z",
+        },
+        {
+          stage: "Offer",
+          date: "2021-03-20T07:00:00.000Z",
+        },
+      ],
+    },
+    {
+      name: "Google",
+      actions: [
+        {
+          stage: "Applied",
+          date: "2021-01-21T08:00:00.000Z",
+        },
+        {
+          stage: "OA",
+          date: "2021-03-07T08:00:00.000Z",
+        },
+        {
+          stage: "Offer",
+          date: "2021-03-21T07:00:00.000Z",
+        },
+      ],
+    },
+    {
+      name: "Amazon",
+      actions: [
+        {
+          stage: "Applied",
+          date: "2021-01-21T08:00:00.000Z",
+        },
+        {
+          stage: "OA",
+          date: "2021-02-21T08:00:00.000Z",
+        },
+        {
+          stage: "Offer",
+          date: "2021-03-21T07:00:00.000Z",
+        },
       ],
     },
   ],
-  Rejected: [],
+  Rejected: [
+    {
+      name: "Netflix",
+      actions: [
+        {
+          stage: "Applied",
+          date: "2021-01-21T08:00:00.000Z",
+        },
+        {
+          stage: "Final",
+          date: "2021-02-28T08:00:00.000Z",
+        },
+        {
+          stage: "Rejected",
+          date: "2021-03-19T07:00:00.000Z",
+        },
+      ],
+    },
+    {
+      name: "Apple",
+      actions: [
+        {
+          stage: "Applied",
+          date: "2021-01-21T08:00:00.000Z",
+        },
+        {
+          stage: "Rejected",
+          date: "2021-03-20T07:00:00.000Z",
+        },
+      ],
+    },
+  ],
 };
