@@ -1,7 +1,3 @@
-import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import { formatDate } from "../utils/Parser";
 import "./VerticalTimeline.css";
@@ -40,7 +36,7 @@ export default function ModalView({ company, setShowModal }) {
       >
         Notes (Markdown support coming soon!)
       </div>
-      <VerticalTimeline className="custom-line">
+      {/* <VerticalTimeline className="custom-line">
         {company.actions.map((action) => (
           <VerticalTimelineElement
             contentStyle={{ background: "rgb(33, 150, 243)", color: "#111" }}
@@ -55,7 +51,7 @@ export default function ModalView({ company, setShowModal }) {
         <VerticalTimelineElement
           iconStyle={{ background: "rgb(16, 204, 82)", color: "#888" }}
         />
-      </VerticalTimeline>
+      </VerticalTimeline> */}
     </div>
   );
 }

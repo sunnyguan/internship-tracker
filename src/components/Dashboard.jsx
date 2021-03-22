@@ -12,6 +12,8 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Sankey } from "./Sankey";
 import CommandInput from "./CommandInput";
 import Timeline from "./Timeline";
+import Stats from "./Stats";
+import Footer from "./Footer";
 
 export function Dashboard() {
   const getValidBoard = () => {
@@ -95,81 +97,85 @@ export function Dashboard() {
   };
 
   return (
-    <>
-      <div className="text-center text-4xl mt-8 font-light tracking-wide">
-        Dashboard
-      </div>
-      <Modal
-        isOpen={showModal}
-        className="bg-white border-2 border-gray-400 absolute top-10 right-10 left-10 bottom-10 rounded-md outline-none overflow-y-scroll overflow-x-hidden"
-      >
-        <ModalView company={modalCompany} setShowModal={setShowModal} />
-      </Modal>
-      <CommandInput highlighter={highlighter} />
-      <div className="">
-        <div className="px-8 grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4 text-center">
-          <DragDropContext onDragEnd={handleOnDragEnd}>
-            {Object.keys(board).map((key) => (
-              <Droppable droppableId={key}>
-                {(provided, snapshot) => (
-                  <div
-                    className={
-                      "rounded-xl shadow-xl p-4 flex flex-col " +
-                      getBackgroundColor(key, snapshot)
-                    }
-                  >
-                    <div className="">
-                      <div className="flex">
-                        <h1 className="text-2xl font-medium pb-4 flex-1 text-left">
-                          {key}
-                        </h1>
-                        <h1 className="text-2xl ">{board[key].length}</h1>
+    <div className="">
+      <div className="p-8">
+        <div className="text-center text-4xl font-light tracking-wide">
+          Internship Tracker
+        </div>
+        <Modal
+          isOpen={showModal}
+          className="bg-white border-2 border-gray-400 absolute top-10 right-10 left-10 bottom-10 rounded-md outline-none overflow-y-scroll overflow-x-hidden"
+        >
+          <ModalView company={modalCompany} setShowModal={setShowModal} />
+        </Modal>
+        <CommandInput highlighter={highlighter} />
+        <div className="">
+          <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4 text-center">
+            <DragDropContext onDragEnd={handleOnDragEnd}>
+              {Object.keys(board).map((key) => (
+                <Droppable droppableId={key}>
+                  {(provided, snapshot) => (
+                    <div
+                      className={
+                        "rounded-xl shadow-xl p-4 flex flex-col " +
+                        getBackgroundColor(key, snapshot)
+                      }
+                    >
+                      <div className="">
+                        <div className="flex">
+                          <h1 className="text-2xl font-medium pb-4 flex-1 text-left">
+                            {key}
+                          </h1>
+                          <h1 className="text-2xl ">{board[key].length}</h1>
+                        </div>
+                      </div>
+                      <div
+                        className="flex-1"
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {Array.from(board[key]).map((company, id) => (
+                            <Draggable
+                              key={company.name}
+                              draggableId={company.name}
+                              index={id}
+                            >
+                              {(provided) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                >
+                                  <Company
+                                    company={company}
+                                    highlight={selected[0].has(
+                                      company.name.toLowerCase()
+                                    )}
+                                    click={() => {
+                                      setModalCompany(company);
+                                      setShowModal(true);
+                                    }}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>{" "}
                       </div>
                     </div>
-                    <div
-                      className="flex-1"
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                    >
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {Array.from(board[key]).map((company, id) => (
-                          <Draggable
-                            key={company.name}
-                            draggableId={company.name}
-                            index={id}
-                          >
-                            {(provided) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                              >
-                                <Company
-                                  company={company}
-                                  highlight={selected[0].has(
-                                    company.name.toLowerCase()
-                                  )}
-                                  click={() => {
-                                    setModalCompany(company);
-                                    setShowModal(true);
-                                  }}
-                                />
-                              </div>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </div>{" "}
-                    </div>
-                  </div>
-                )}
-              </Droppable>
-            ))}
-          </DragDropContext>
+                  )}
+                </Droppable>
+              ))}
+            </DragDropContext>
+          </div>
         </div>
       </div>
+      <Stats board={board} />
       <Sankey board={board} />
       <Timeline board={board} />
-    </>
+      <Footer />
+    </div>
   );
 }

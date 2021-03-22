@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import Chart from "react-google-charts";
 
 function Timeline({ board }) {
@@ -13,21 +12,28 @@ function Timeline({ board }) {
       board[key].forEach((company) => {
         let actions = company.actions;
         for (let i = 0; i < actions.length - 1; ++i) {
-          data.push([
-            company.name,
-            actions[i].stage,
-            new Date(actions[i].date),
-            new Date(actions[i + 1].date),
-          ]);
+          let date1 = new Date(actions[i].date);
+          let date2 = new Date(actions[i + 1].date);
+          if (date1 <= date2) {
+            data.push([
+              company.name,
+              actions[i].stage,
+              new Date(actions[i].date),
+              new Date(actions[i + 1].date),
+            ]);
+          }
         }
         if (actions.length >= 1) {
           let id = actions.length - 1;
-          data.push([
-            company.name,
-            actions[id].stage,
-            new Date(actions[id].date),
-            new Date(),
-          ]);
+          let lastDate = new Date(actions[id].date);
+          if (lastDate <= new Date()) {
+            data.push([
+              company.name,
+              actions[id].stage,
+              new Date(actions[id].date),
+              new Date(),
+            ]);
+          }
         }
       });
     });
@@ -44,8 +50,8 @@ function Timeline({ board }) {
     return data;
   };
   return (
-    <div className="m-8">
-      <div className="text-2xl font-light text-center p-4">Timeline</div>
+    <div className="p-8 bg-blue-100">
+      <div className="text-3xl font-light text-center p-4">Timeline</div>
       <Chart
         width={"100%"}
         height={"500px"}

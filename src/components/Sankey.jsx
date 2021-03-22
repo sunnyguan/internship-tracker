@@ -50,8 +50,8 @@ export function Sankey({ board }) {
   };
 
   return (
-    <div className="m-8">
-      <div className="text-2xl font-light text-center py-4">Sankey Diagram</div>
+    <div className="p-8 bg-blue-100">
+      <div className="text-3xl font-light text-center py-4">Sankey Diagram</div>
       <div className="">
         <Chart
           options={{
