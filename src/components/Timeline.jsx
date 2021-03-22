@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Chart from "react-google-charts";
 
 function Timeline({ board }) {
@@ -7,14 +8,7 @@ function Timeline({ board }) {
     );
   }
   const getData = () => {
-    let data = [
-      [
-        { type: "string", id: "Position" },
-        { type: "string", id: "Name" },
-        { type: "date", id: "Start" },
-        { type: "date", id: "End" },
-      ],
-    ];
+    let data = [];
     Object.keys(board).forEach((key) => {
       board[key].forEach((company) => {
         let actions = company.actions;
@@ -37,18 +31,27 @@ function Timeline({ board }) {
         }
       });
     });
+
+    data.sort((o1, o2) => {
+      return o1[2] - o2[2];
+    });
+    data.unshift([
+      { type: "string", id: "Position" },
+      { type: "string", id: "Name" },
+      { type: "date", id: "Start" },
+      { type: "date", id: "End" },
+    ]);
     return data;
   };
-
   return (
     <div className="m-8">
       <div className="text-2xl font-light text-center p-4">Timeline</div>
       <Chart
         width={"100%"}
-        height={"400px"}
+        height={"500px"}
         chartType="Timeline"
         loader={<div>Loading Chart</div>}
-        data={getData()}
+        data={getData(board)}
         rootProps={{ "data-testid": "3" }}
       />
     </div>

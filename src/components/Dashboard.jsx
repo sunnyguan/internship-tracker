@@ -14,8 +14,6 @@ import CommandInput from "./CommandInput";
 import Timeline from "./Timeline";
 
 export function Dashboard() {
-  console.log(ls);
-
   const getValidBoard = () => {
     let lsBoard = ls.get("board");
     try {
@@ -33,6 +31,7 @@ export function Dashboard() {
     } catch (e) {
       ls.set("board", DATA);
     }
+    // ls.set("board", DATA);
     return ls.get("board");
   };
 

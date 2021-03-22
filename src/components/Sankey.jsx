@@ -1,5 +1,16 @@
 import Chart from "react-google-charts";
 
+const colors = [
+  "#a6cee3",
+  "#b2df8a",
+  "#fb9a99",
+  "#fdbf6f",
+  "#cab2d6",
+  "#ffff99",
+  "#1f78b4",
+  "#33a02c",
+];
+
 export function Sankey({ board }) {
   const extract = (text) => {
     return text.stage.toLowerCase();
@@ -38,13 +49,22 @@ export function Sankey({ board }) {
     return result;
   };
 
-  count(board);
-
   return (
     <div className="m-8">
       <div className="text-2xl font-light text-center py-4">Sankey Diagram</div>
       <div className="">
         <Chart
+          options={{
+            sankey: {
+              node: {
+                colors: colors,
+              },
+              link: {
+                colorMode: "gradient",
+                colors: colors,
+              },
+            },
+          }}
           height={"500px"}
           chartType="Sankey"
           loader={<div>Loading Chart</div>}

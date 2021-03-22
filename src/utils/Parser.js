@@ -120,6 +120,7 @@ export const process = (text, enter, oldBoard) => {
         added |= addToStage(board, stage, obj);
       });
       if (removed || added) resetFlag = 2;
+      console.log(board);
     }
   } else if (deleteMatch.text() !== "") {
     let company = deleteMatch.groups("company").text();
@@ -130,10 +131,10 @@ export const process = (text, enter, oldBoard) => {
     if (enter) {
       let removed = filterReturn(board, company)[1];
       if (removed) resetFlag = 2;
+      console.log(board);
     }
   } else {
     resetFlag = 1;
   }
-
   return [board, info, selected, resetFlag];
 };
