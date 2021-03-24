@@ -48,9 +48,9 @@ export function Dashboard() {
         </div>
         <CommandInput updateBoard={updateBoard} board={board} />
       </div>
-      <Stats board={board} />
       <Timeline board={board} />
       <Sankey board={board} />
+      <Stats board={board} />
       <Footer />
     </div>
   );
