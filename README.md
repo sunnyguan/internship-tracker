@@ -12,4 +12,8 @@ Uses this [nlp library](https://github.com/spencermountain/compromise) to parse 
 4. Add Netflix to rejected
 5. Remove Facebook
 
-Click on a company to see a vertical timeline as well as your own notes.
+Additional features:
+
+1. Autocomplete: type @ followed by a company on the timeline to autocomplete its name
+2. Statistics: various statistics about your internship hunt
+3. Sankey Diagram: colorful sankey diagram
