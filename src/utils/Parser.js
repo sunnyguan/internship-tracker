@@ -5,50 +5,14 @@ import nlpnumbers from "compromise-numbers";
 nlp.extend(nlpdates);
 nlp.extend(nlpnumbers);
 
-const keys = ["applied", "oa", "phone", "final", "offer", "rejected"];
-const str = keys.join("|");
-
-const addOrMoveMatch = `(move|change|update|switch|add|insert|append|prepend)? [<company>.+] to [<stage>(${str})] stage?`;
-
+const addOrMoveMatch = `(move|change|update|switch|add|insert|append|prepend)? [<company>.+] to [<stage>.] stage?`;
 const deleteMatcher = `(remove|delete) [<company>.+]`;
 
-const toLowerCaseSet = (list) => {
-  return new Set(list.map((item) => item.toLowerCase()));
-};
-
-export const filterReturn = (
-  board,
-  match,
-  stage = "n/a",
-  date = new Date()
-) => {
-  let obj = { name: match, actions: [] };
-  let stageName = stage;
-  let deleted = false;
-  Object.keys(board).forEach((group) => {
-    if (group.toLowerCase() === stage.toLowerCase()) stageName = group;
-    board[group].forEach((item) => {
-      if (item.name.toLowerCase() === match.toLowerCase()) obj = item;
-    });
-    let initSize = board[group].length;
-    board[group] = board[group].filter(
-      (item) => item.name.toLowerCase() !== match.toLowerCase()
-    );
-    if (board[group].length !== initSize) deleted = true;
-  });
-  if (stage !== "n/a") obj.actions.push({ stage: stageName, date: date });
-  return [obj, deleted];
-};
-
-export const addToStage = (board, stage, obj, idx = 0) => {
-  let added = false;
-  Object.keys(board).forEach((group) => {
-    if (group.toLowerCase() === stage.toLowerCase()) {
-      board[group].splice(idx, 0, obj);
-      added = true;
-    }
-  });
-  return added;
+export const addToStage = (board, company, stage, date) => {
+  let lowerCompany = company.toLowerCase();
+  if (!(lowerCompany in board))
+    board[lowerCompany] = { name: company, actions: [] };
+  board[lowerCompany].actions.push({ stage: stage, date: date });
 };
 
 const generateProcessed = (companies, stage, date) => {
@@ -83,7 +47,7 @@ const monthNames = [
 
 export const formatDate = (dateString) => {
   let dateObj = new Date(dateString);
-  let str = monthNames[dateObj.getUTCMonth()] + " " + dateObj.getUTCDate();
+  let str = monthNames[dateObj.getUTCMonth()] + " " + dateObj.getUTCDate() + ", " + (dateObj.getUTCFullYear());
   return str;
 };
 
@@ -94,7 +58,6 @@ export const process = (text, enter, oldBoard) => {
   let deleteMatch = doc.match(deleteMatcher);
 
   let info = "";
-  let selected = [new Set(), ""];
   let resetFlag = 0;
 
   if (addMoveMatch.text() !== "") {
@@ -109,32 +72,24 @@ export const process = (text, enter, oldBoard) => {
     if (!!dateObj) date = new Date(dateObj.start).toISOString();
 
     info = generateProcessed(companies, stage, date);
-    selected = [toLowerCaseSet(companies), stage];
 
     if (enter) {
-      let removed = false;
-      let added = false;
       companies.forEach((company) => {
-        let [obj, removedOne] = filterReturn(board, company, stage, date);
-        removed |= removedOne;
-        added |= addToStage(board, stage, obj);
+        addToStage(board, company, stage, date);
       });
-      if (removed || added) resetFlag = 2;
-      console.log(board);
+      resetFlag = 2;
     }
   } else if (deleteMatch.text() !== "") {
     let company = deleteMatch.groups("company").text();
     info = `
         delete <span class='bg-indigo-300 px-2 py-1 rounded-md shadow-md'>${company}</span>
       `;
-    selected = [new Set([company]), ""];
     if (enter) {
-      let removed = filterReturn(board, company)[1];
-      if (removed) resetFlag = 2;
-      console.log(board);
+      delete board[company.toLowerCase()];
+      resetFlag = 2;
     }
   } else {
     resetFlag = 1;
   }
-  return [board, info, selected, resetFlag];
+  return [board, info, resetFlag];
 };
