@@ -37,7 +37,7 @@ function Stats({ board }) {
   };
 
   // eslint-disable-next-line
-  useEffect(getStats, [stats]);
+  useEffect(getStats, [board]);
 
   return (
     <div className="p-8 bg-blue-100">
