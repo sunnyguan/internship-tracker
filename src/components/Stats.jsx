@@ -6,7 +6,8 @@ function Stats({ board }) {
   const calculateTotal = () => {
     let newStats = stats;
     newStats["Total Companies"] = Object.keys(board).length;
-    setStats(newStats);
+    if (newStats !== stats)
+      setStats(newStats);
   };
 
   const calculateRates = () => {
@@ -28,7 +29,8 @@ function Stats({ board }) {
     let newStats = stats;
     newStats["Offer Rate"] = (offers / count) * 100 + "%";
     newStats["Reject Rate"] = (rejects / count) * 100 + "%";
-    setStats(newStats);
+    if (newStats !== stats)
+      setStats(newStats);
   };
 
   const getStats = () => {
@@ -37,7 +39,8 @@ function Stats({ board }) {
   };
 
   // eslint-disable-next-line
-  useEffect(getStats, [board]);
+  // useEffect(getStats, [board]);
+  getStats();
 
   return (
     <div className="p-8 bg-blue-100">
