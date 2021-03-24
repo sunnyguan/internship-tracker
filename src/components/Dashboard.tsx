@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 import nlp from "compromise";
 import nlpdates from "compromise-dates";
 import nlpnumbers from "compromise-numbers";
-import { DATA } from "./data.js";
-import ls from "local-storage";
+import { DATA } from "./data";
+import * as ls from "local-storage";
 import { Sankey } from "./Sankey";
 import CommandInput from "./CommandInput";
 import Timeline from "./Timeline";
 import Stats from "./Stats";
 import Footer from "./Footer";
+import { boardType } from "../types/board";
 
 export function Dashboard() {
-  const getValidBoard = () => {
-    let lsBoard = ls.get("board");
+  const getValidBoard = (): boardType => {
+    let lsBoard: boardType = ls.get("board");
     try {
       Object.keys(lsBoard).forEach((company) => {
         let name = lsBoard[company].name;
@@ -26,7 +27,7 @@ export function Dashboard() {
     return ls.get("board");
   };
 
-  const [board, setBoard] = useState(getValidBoard());
+  const [board, setBoard] = useState<boardType>(getValidBoard());
 
   useEffect(() => {
     nlp.extend(nlpdates);
@@ -34,7 +35,7 @@ export function Dashboard() {
     console.log(nlp);
   }, []);
 
-  const updateBoard = (newBoard) => {
+  const updateBoard = (newBoard: boardType) => {
     setBoard(newBoard);
     ls.set("board", newBoard);
     console.log(ls.get("board"));

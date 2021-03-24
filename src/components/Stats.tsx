@@ -1,7 +1,16 @@
 import { useState } from "react";
+import { boardType } from "../types/board";
 
-function Stats({ board }) {
-  const [stats, setStats] = useState({});
+type Props = {
+  board: boardType
+}
+
+type statsType = {
+  [key: string]: string | number
+}
+
+function Stats({ board }: Props) {
+  const [stats, setStats] = useState<statsType>({});
 
   const calculateTotal = () => {
     let newStats = stats;

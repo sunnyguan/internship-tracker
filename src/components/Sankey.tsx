@@ -1,4 +1,5 @@
 import Chart from "react-google-charts";
+import { boardType } from "../types/board";
 
 const colors = [
   "#a6cee3",
@@ -11,16 +12,26 @@ const colors = [
   "#33a02c",
 ];
 
-export function Sankey({ board }) {
+type Props = {
+  board: boardType
+}
+
+type counterType = {
+  [key: string]: number
+}
+
+type sankeyType = Array<[string, string, string | number]>;
+
+export function Sankey({ board }: Props) {
   if (Object.keys(board).length === 0) {
     return <div className="text-xl font-light text-center">Empty Sankey</div>;
   }
-  const extract = (text) => {
+  const extract = (text: { stage: string; }) => {
     return text.stage.toLowerCase();
   };
 
-  const count = (board) => {
-    let counter = {};
+  const count = (board: boardType) => {
+    let counter: counterType = {};
     Object.keys(board).forEach((key) => {
       let company = board[key];
       let actions = company.actions;
@@ -33,7 +44,7 @@ export function Sankey({ board }) {
       }
     });
 
-    let result = [["From", "To", "Count"]];
+    let result: sankeyType = [["From", "To", "Count"]];
     Object.keys(counter).forEach((key) => {
       let split = key.split(",");
       result.push([split[0], split[1], counter[key]]);

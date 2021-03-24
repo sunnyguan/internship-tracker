@@ -3,15 +3,20 @@ import { process } from "../utils/Parser";
 import TextInput from "react-autocomplete-input";
 import "react-autocomplete-input/dist/bundle.css";
 
-function CommandInput({ updateBoard, board }) {
+type Props = {
+  updateBoard: (board: any) => void,
+  board: any
+}
+
+function CommandInput({ updateBoard, board }: Props) {
   const [inputValue, setInputValue] = useState("");
   const [info, setInfo] = useState("");
 
-  const handleChange = (e) => {
+  const handleChange = (e: string) => {
     if (!e.endsWith("\n")) setInputValue(e);
   };
 
-  const handleKeyUp = (e) => {
+  const handleKeyUp = (e: {key: string}) => {
     let text = inputValue.replaceAll("@", "");
     let enter = e.key === "Enter";
     let [newBoard, newInfo, resetFlag] = process(text, enter, board);

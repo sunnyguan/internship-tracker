@@ -1,13 +1,18 @@
 import { useState } from "react";
 import Chart from "react-google-charts";
+import { boardType } from "../types/board";
 
 const lineHeight = 40;
 
-function Timeline({ board }) {
+type Props = {
+  board: boardType
+}
+
+function Timeline({ board }: Props) {
   const [height, setHeight] = useState("500px");
 
-  const getData = (board) => {
-    let data = [];
+  const getData = (board: boardType) => {
+    let data: Array<any> = [];
     let newHeight = Object.keys(board).length * lineHeight + 60 + "px";
     if (newHeight !== height) setHeight(newHeight);
     Object.keys(board).forEach((key) => {
@@ -35,7 +40,7 @@ function Timeline({ board }) {
       }
     });
     data.sort((o1, o2) => {
-      return o1[2] - o2[2];
+      return o1[2].getTime() - o2[2].getTime();
     });
     data.unshift([
       { type: "string", id: "Position" },

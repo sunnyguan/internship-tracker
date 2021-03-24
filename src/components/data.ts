@@ -1,4 +1,6 @@
-export const DATA = {
+import { boardType } from "../types/board";
+
+export const DATA: boardType = {
   facebook: {
     name: "Facebook",
     actions: [
