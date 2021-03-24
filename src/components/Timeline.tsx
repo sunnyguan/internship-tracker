@@ -5,8 +5,8 @@ import { boardType } from "../types/board";
 const lineHeight = 40;
 
 type Props = {
-  board: boardType
-}
+  board: boardType;
+};
 
 function Timeline({ board }: Props) {
   const [height, setHeight] = useState("500px");
@@ -34,8 +34,8 @@ function Timeline({ board }: Props) {
         let id = actions.length - 1;
         let lastDate = new Date(actions[id].date);
         let nextDate = new Date();
-        if (lastDate.getTime() <= new Date().getTime()) nextDate = new Date();
-        else nextDate.setDate(lastDate.getDate() + 2);
+        if (lastDate.getTime() <= nextDate.getTime()) nextDate = new Date();
+        else nextDate = new Date(lastDate.getTime() + 2 * 86400);
         data.push([company.name, actions[id].stage, lastDate, nextDate]);
       }
     });

@@ -11,14 +11,23 @@ type companyType = Array<string>;
 const addOrMoveMatch = `(move|change|update|switch|add|insert|append|prepend)? [<company>.+] to [<stage>.] stage?`;
 const deleteMatcher = `(remove|delete) [<company>.+]`;
 
-export const addToStage = (board: boardType, company: string, stage: string, date: string) => {
+export const addToStage = (
+  board: boardType,
+  company: string,
+  stage: string,
+  date: string
+) => {
   let lowerCompany = company.toLowerCase();
   if (!(lowerCompany in board))
     board[lowerCompany] = { name: company, actions: [] };
   board[lowerCompany].actions.push({ stage: stage, date: date });
 };
 
-const generateProcessed = (companies: companyType, stage: string, date: string) => {
+const generateProcessed = (
+  companies: companyType,
+  stage: string,
+  date: string
+) => {
   let processed = "";
   companies.forEach((comp) => {
     processed += `<span class='bg-indigo-300 px-2 py-1 rounded-md shadow-md mx-1'>${comp}</span>`;
@@ -50,8 +59,21 @@ const monthNames = [
 
 export const formatDate = (dateString: string) => {
   let dateObj = new Date(dateString);
-  let str = monthNames[dateObj.getUTCMonth()] + " " + dateObj.getUTCDate() + ", " + (dateObj.getUTCFullYear());
+  let str =
+    monthNames[dateObj.getUTCMonth()] +
+    " " +
+    dateObj.getUTCDate() +
+    ", " +
+    dateObj.getUTCFullYear();
   return str;
+};
+
+export const generateDeleted = (companies: companyType) => {
+  let processed = "delete ";
+  companies.forEach((company) => {
+    processed += `<span class='mx-1 bg-indigo-300 px-2 py-1 rounded-md shadow-md'>${company}</span>`;
+  });
+  return processed;
 };
 
 export const process = (text: string, enter: boolean, oldBoard: boardType) => {
@@ -83,12 +105,16 @@ export const process = (text: string, enter: boolean, oldBoard: boardType) => {
       resetFlag = 2;
     }
   } else if (deleteMatch.text() !== "") {
-    let company = deleteMatch.groups("company").text();
-    info = `
-        delete <span class='bg-indigo-300 px-2 py-1 rounded-md shadow-md'>${company}</span>
-      `;
+    let companies = deleteMatch
+      .groups("company")
+      .text()
+      .split(",")
+      .map((item) => item.trim());
+    info = generateDeleted(companies);
     if (enter) {
-      delete board[company.toLowerCase()];
+      companies.forEach((company) => {
+        delete board[company.toLowerCase()];
+      });
       resetFlag = 2;
     }
   } else {
