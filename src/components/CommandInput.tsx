@@ -29,7 +29,7 @@ function CommandInput({ updateBoard, board }: Props) {
   };
 
   return (
-    <div className="px-8 header text-center">
+    <div className="header text-center">
       <TextInput
         className="mt-4 resize-none ring-blue-200 mr-4 pt-1 h-8 px-4 rounded-lg placeholder-gray-400 text-gray-900 inline-block shadow-md focus:outline-none ring-2 focus:ring-blue-600 w-full bg-white text-center"
         placeholder='Try "move IMC to offer two weeks ago"'

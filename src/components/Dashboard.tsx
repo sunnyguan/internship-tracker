@@ -41,11 +41,70 @@ export function Dashboard() {
     console.log(ls.get("board"));
   };
 
+  const validate = (testBoard: any): boolean => {
+    let valid = true;
+    Object.keys(testBoard).forEach((key) => {
+      let company = testBoard[key];
+      if (!company.name || !company.actions) valid = false;
+      else {
+        company.actions.forEach((action: any) => {
+          if (!action.stage || !action.date) valid = false;
+        });
+      }
+    });
+    return valid;
+  };
+
+  const handleUpload = (e: any) => {
+    try {
+      const fileReader = new FileReader();
+      fileReader.readAsText(e.target.files[0], "UTF-8");
+      fileReader.onload = (e) => {
+        let res = e.target?.result;
+        let js = JSON.parse(res as string);
+        if (validate(js)) updateBoard(js);
+        else alert("file invalid");
+      };
+    } catch (error) {
+      alert("file invalid");
+    }
+  };
+
+  const downloadJSON = (e: any) => {
+    const element = document.createElement("a");
+    const file = new Blob([JSON.stringify(board)], {
+      type: "text/plain",
+    });
+    element.href = URL.createObjectURL(file);
+    element.download = "applications.json";
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+  };
+
   return (
     <div className="">
-      <div className="p-4">
-        <div className="text-center text-4xl font-light tracking-wide">
-          Internship Tracker
+      <div className="m-8">
+        <div className="flex gap-4">
+          <div className="text-4xl font-light tracking-wide flex-1">
+            Internship Tracker
+          </div>
+          <button
+            className="btn"
+            onClick={() => {
+              document.getElementById("fileInput")?.click();
+            }}
+          >
+            <input
+              type="file"
+              onChange={handleUpload}
+              className="hidden"
+              id="fileInput"
+            />
+            Import
+          </button>
+          <button className="btn" onClick={downloadJSON}>
+            Export
+          </button>
         </div>
         <CommandInput updateBoard={updateBoard} board={board} />
       </div>

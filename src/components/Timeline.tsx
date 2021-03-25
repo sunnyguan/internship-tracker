@@ -60,14 +60,14 @@ function Timeline({ board }: Props) {
   }
   return (
     <div className="px-8 pt-4 bg-blue-100">
-      <div className="text-3xl font-light text-center p-4">Timeline</div>
+      <div className="text-3xl font-light text-center py-4">Timeline</div>
       <div className="py-4 flex gap-4">
         <h1 className="font-light text-xl flex items-center">Filters:</h1>
         <button
           onClick={() => {
             setMultiStages(!multiStages);
           }}
-          className="px-4 py-2 bg-blue-300 hover:bg-blue-500 cursor-pointer ring-2 ring-blue-200 rounded-xl shadow-lg focus:outline-none"
+          className="btn"
         >
           {multiStages ? "Show All" : "Show Only >1 Stages"}
         </button>
