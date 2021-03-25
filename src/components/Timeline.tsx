@@ -10,6 +10,7 @@ type Props = {
 
 function Timeline({ board }: Props) {
   const [height, setHeight] = useState("500px");
+  const [multiStages, setMultiStages] = useState(false);
 
   const getData = (board: boardType) => {
     let data: Array<any> = [];
@@ -18,6 +19,9 @@ function Timeline({ board }: Props) {
     Object.keys(board).forEach((key) => {
       let company = board[key];
       let actions = company.actions;
+
+      if (multiStages && actions.length <= 1) return;
+
       for (let i = 0; i < actions.length - 1; ++i) {
         let date1 = new Date(actions[i].date);
         let date2 = new Date(actions[i + 1].date);
@@ -57,6 +61,17 @@ function Timeline({ board }: Props) {
   return (
     <div className="px-8 pt-4 bg-blue-100">
       <div className="text-3xl font-light text-center p-4">Timeline</div>
+      <div className="py-4 flex gap-4">
+        <h1 className="font-light text-xl flex items-center">Filters:</h1>
+        <button
+          onClick={() => {
+            setMultiStages(!multiStages);
+          }}
+          className="px-4 py-2 bg-blue-300 hover:bg-blue-500 cursor-pointer ring-2 ring-blue-200 rounded-xl shadow-lg focus:outline-none"
+        >
+          {multiStages ? "Show All" : "Show Only >1 Stages"}
+        </button>
+      </div>
       <Chart
         key={height}
         width={"100%"}

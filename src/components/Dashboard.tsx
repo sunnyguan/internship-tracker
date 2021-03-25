@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import nlp from "compromise";
 import nlpdates from "compromise-dates";
 import nlpnumbers from "compromise-numbers";
-import { DATA } from "./data";
+import { DATA } from "../types/data";
 import * as ls from "local-storage";
 import { Sankey } from "./Sankey";
 import CommandInput from "./CommandInput";
