@@ -84,27 +84,29 @@ export function Dashboard() {
   return (
     <div className="bg-indigo-200">
       <div className="p-8">
-        <div className="flex gap-4">
+        <div className="flex gap-4 flex-col md:flex-row">
           <div className="text-4xl font-light tracking-wide flex-1">
             Internship Tracker
           </div>
-          <button
-            className="btn"
-            onClick={() => {
-              document.getElementById("fileInput")?.click();
-            }}
-          >
-            <input
-              type="file"
-              onChange={handleUpload}
-              className="hidden"
-              id="fileInput"
-            />
-            Import
-          </button>
-          <button className="btn" onClick={downloadJSON}>
-            Export
-          </button>
+          <div className="flex gap-4 mx-auto">
+            <button
+              className="btn"
+              onClick={() => {
+                document.getElementById("fileInput")?.click();
+              }}
+            >
+              <input
+                type="file"
+                onChange={handleUpload}
+                className="hidden"
+                id="fileInput"
+              />
+              Import
+            </button>
+            <button className="btn" onClick={downloadJSON}>
+              Export
+            </button>
+          </div>
         </div>
         <CommandInput updateBoard={updateBoard} board={board} />
       </div>
