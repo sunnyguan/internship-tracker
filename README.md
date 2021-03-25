@@ -17,3 +17,15 @@ Additional features:
 1. Autocomplete: type @ followed by a company on the timeline to autocomplete its name
 2. Statistics: various statistics about your internship hunt
 3. Sankey Diagram: colorful sankey diagram
+4. Filter(s): filter by number of stages
+5. Import/Export: import and export application status
+
+Planned features:
+
+1. Notes: add notes for each application (or maybe each stage)
+2. Filter(s): more advanced filters
+
+## Setup
+
+1. Clone the repository locally
+2. `npm run start` to start the application
