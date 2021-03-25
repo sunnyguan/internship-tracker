@@ -82,8 +82,8 @@ export function Dashboard() {
   };
 
   return (
-    <div className="">
-      <div className="m-8">
+    <div className="bg-indigo-200">
+      <div className="p-8">
         <div className="flex gap-4">
           <div className="text-4xl font-light tracking-wide flex-1">
             Internship Tracker

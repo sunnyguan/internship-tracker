@@ -53,7 +53,7 @@ function Stats({ board }: Props) {
 
   return (
     <div className="p-8 bg-indigo-200">
-      <div className="text-center text-3xl font-light pb-8">Stats</div>
+      <div className="text-center text-3xl font-light pb-8">Statistics</div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {Object.keys(stats).map((key) => (
           <div className="text-center py-4" key={key}>

@@ -60,7 +60,6 @@ function Timeline({ board }: Props) {
   }
   return (
     <div className="px-8 pt-4 bg-blue-100">
-      <div className="text-3xl font-light text-center py-4">Timeline</div>
       <div className="py-4 flex gap-4">
         <h1 className="font-light text-xl flex items-center">Filters:</h1>
         <button
