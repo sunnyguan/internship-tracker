@@ -1,6 +1,7 @@
 export type stageType = {
     stage: string,
-    date: string
+    date: string,
+    notes?: string
 }
 
 export type companyType = {

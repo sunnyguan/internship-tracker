@@ -1,10 +1,10 @@
-import { boardType } from "../types/board";
+import { boardType } from "./board";
 
 export const DATA: boardType = {
   facebook: {
     name: "Facebook",
     actions: [
-      { stage: "applied", date: "2021-03-01T02:49:15.220Z" },
+      { stage: "applied", date: "2021-03-01T02:49:15.220Z", notes: "applied via referral from friend, recruiter also reached out" },
       { stage: "phone", date: "2021-03-10T02:49:15.220Z" },
     ],
   },

@@ -110,7 +110,7 @@ export function Dashboard() {
         </div>
         <CommandInput updateBoard={updateBoard} board={board} />
       </div>
-      <Timeline board={board} />
+      <Timeline board={board} updateBoard={updateBoard} />
       <Sankey board={board} />
       <Stats board={board} />
       <Footer />

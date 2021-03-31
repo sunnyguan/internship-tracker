@@ -1,16 +1,63 @@
 import { useState } from "react";
 import Chart from "react-google-charts";
-import { boardType } from "../types/board";
+import { boardType, companyType, stageType } from "../types/board";
+import ModalView from "./ModalView";
 
 const lineHeight = 40;
 
 type Props = {
   board: boardType;
+  updateBoard: (board: boardType) => void;
 };
 
-function Timeline({ board }: Props) {
+function Timeline({ board, updateBoard }: Props) {
+  const [showModal, setShowModal] = useState(false);
   const [height, setHeight] = useState("500px");
   const [multiStages, setMultiStages] = useState(false);
+
+  const duration = (start: Date, end: Date): number => {
+    return Math.ceil((end.getTime() - start.getTime()) / 86400000);
+  };
+
+  const genTooltip = (
+    company: companyType,
+    stage: stageType,
+    start: Date,
+    end: Date
+  ): string => {
+    return `
+    <div class="p-4 w-36">
+      <p class="font-semibold">${stage.stage}: ${duration(start, end)} days</p>
+      <p class="font-light">${stage.notes || ""}</p>
+    </div>
+  `;
+  };
+
+  const updateNote = (note: string) => {
+    let company = selectedNote.company;
+    let stage = selectedNote.stage;
+    let done = false;
+    let newBoard: boardType = JSON.parse(JSON.stringify(board));
+    newBoard[company.toLowerCase()].actions.forEach((action) => {
+      if (!done && action.stage === stage) {
+        action.notes = note;
+        done = true;
+      }
+    });
+    updateBoard(newBoard);
+  };
+
+  const getNote = (company: string, stage: string) => {
+    let done = false;
+    let note = "";
+    board[company.toLowerCase()].actions.forEach((action) => {
+      if (!done && action.stage === stage) {
+        note = action.notes as string;
+        done = true;
+      }
+    });
+    return note;
+  }
 
   const getData = (board: boardType) => {
     let data: Array<any> = [];
@@ -29,6 +76,7 @@ function Timeline({ board }: Props) {
           data.push([
             company.name,
             actions[i].stage,
+            genTooltip(company, actions[i], date1, date2),
             new Date(actions[i].date),
             new Date(actions[i + 1].date),
           ]);
@@ -40,20 +88,31 @@ function Timeline({ board }: Props) {
         let nextDate = new Date();
         if (lastDate.getTime() <= nextDate.getTime()) nextDate = new Date();
         else nextDate = new Date(lastDate.getTime() + 2 * 86400);
-        data.push([company.name, actions[id].stage, lastDate, nextDate]);
+        data.push([
+          company.name,
+          actions[id].stage,
+          genTooltip(company, actions[id], lastDate, nextDate),
+          lastDate,
+          nextDate,
+        ]);
       }
     });
     data.sort((o1, o2) => {
-      return o1[2].getTime() - o2[2].getTime();
+      return o1[3].getTime() - o2[3].getTime();
     });
     data.unshift([
       { type: "string", id: "Position" },
       { type: "string", id: "Name" },
+      { type: "string", role: "tooltip", p: { html: true } },
       { type: "date", id: "Start" },
       { type: "date", id: "End" },
     ]);
     return data;
   };
+
+  const [selectedNote, setSelectedNote] = useState({ company: "", stage: "" });
+  const [currNote, setCurrNote] = useState("");
+
   if (Object.keys(board).length === 0) {
     // TODO cleaner look
     return <div className="text-center text-xl font-light">Empty Timeline</div>;
@@ -78,8 +137,33 @@ function Timeline({ board }: Props) {
         chartType="Timeline"
         loader={<div>Loading Chart</div>}
         data={getData(board)}
-        rootProps={{ "data-testid": "3" }}
+        rootProps={{ "data-testid": "10" }}
+        options={{
+          tooltip: {
+            isHtml: true,
+          },
+        }}
+        chartEvents={[
+          {
+            eventName: "select",
+            callback: ({ chartWrapper }) => {
+              const chart = chartWrapper.getChart();
+              const selection = chart.getSelection();
+              if (selection.length === 1) {
+                const [selectedItem] = selection;
+                const dataTable = chartWrapper.getDataTable();
+                const row = selectedItem.row;
+                let company = dataTable?.getValue(row, 0) as string;
+                let stage = dataTable?.getValue(row, 1) as string;
+                setSelectedNote({ company: company, stage: stage });
+                setCurrNote(getNote(company, stage));
+                setShowModal(true);
+              }
+            },
+          },
+        ]}
       />
+      <ModalView key={currNote} selection={selectedNote} showModal={showModal} closeModal={() => {setShowModal(false)}} updateNote={updateNote} initial={currNote} />
     </div>
   );
 }
