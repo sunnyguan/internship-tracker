@@ -9,8 +9,7 @@ Uses this [nlp library](https://github.com/spencermountain/compromise) to parse 
 1. Move Amazon to OA yesterday
 2. Move Paycom to Final on 03/10
 3. Move Apple, PayPal, Facebook to phone two days ago
-4. Add Netflix to rejected
-5. Remove Facebook
+4. Remove Facebook, Google
 
 Additional features:
 
@@ -19,11 +18,11 @@ Additional features:
 3. Sankey Diagram: colorful sankey diagram
 4. Filter(s): filter by number of stages
 5. Import/Export: import and export application status
+6. Notes: click on a section on the timeline to view/edit your notes
 
 Planned features:
 
-1. Notes: add notes for each application (or maybe each stage)
-2. Filter(s): more advanced filters
+1. Filter(s): more advanced filters
 
 ## Setup
 
