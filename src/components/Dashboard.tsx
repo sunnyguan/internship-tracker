@@ -8,7 +8,7 @@ import { Sankey } from "./Sankey";
 import CommandInput from "./CommandInput";
 import Timeline from "./Timeline";
 import Stats from "./Stats";
-import Footer from "./Footer";
+// import Footer from "./Footer";
 import { boardType } from "../types/board";
 
 export function Dashboard() {
@@ -113,7 +113,7 @@ export function Dashboard() {
       <Timeline board={board} updateBoard={updateBoard} />
       <Sankey board={board} />
       <Stats board={board} />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }
