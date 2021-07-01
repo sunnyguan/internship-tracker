@@ -13,12 +13,12 @@ const colors = [
 ];
 
 type Props = {
-  board: boardType
-}
+  board: boardType;
+};
 
 type counterType = {
-  [key: string]: number
-}
+  [key: string]: number;
+};
 
 type sankeyType = Array<[string, string, string | number]>;
 
@@ -26,7 +26,7 @@ export function Sankey({ board }: Props) {
   if (Object.keys(board).length === 0) {
     return <div className="text-xl font-light text-center">Empty Sankey</div>;
   }
-  const extract = (text: { stage: string; }) => {
+  const extract = (text: { stage: string }) => {
     return text.stage.toLowerCase();
   };
 
@@ -52,28 +52,43 @@ export function Sankey({ board }: Props) {
     return result;
   };
 
-  return (
-    <div className="p-8 bg-blue-100">
-      <div className="">
-        <Chart
-          options={{
-            sankey: {
-              node: {
-                colors: colors,
+  const empty_sankey = (board: boardType) => {
+    let good = false;
+    Object.keys(board).forEach((key) => {
+      if (board[key].actions.length > 1) good = true;
+    });
+    return good;
+  };
+
+  if (empty_sankey(board))
+    return (
+      <div className="p-8 bg-blue-100">
+        <div className="">
+          <Chart
+            options={{
+              sankey: {
+                node: {
+                  colors: colors,
+                },
+                link: {
+                  colorMode: "gradient",
+                  colors: colors,
+                },
               },
-              link: {
-                colorMode: "gradient",
-                colors: colors,
-              },
-            },
-          }}
-          height={"500px"}
-          chartType="Sankey"
-          loader={<div>Loading Chart</div>}
-          data={count(board)}
-          className="h-full"
-        />
+            }}
+            height={"500px"}
+            chartType="Sankey"
+            loader={<div>Loading Chart</div>}
+            data={count(board)}
+            className="h-full"
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  else
+    return (
+      <div className="text-center p-4 bg-blue-100">
+        Add in at least 2 stages to view Sankey diagram.
+      </div>
+    );
 }

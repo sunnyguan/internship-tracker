@@ -57,7 +57,7 @@ function Timeline({ board, updateBoard }: Props) {
       }
     });
     return note;
-  }
+  };
 
   const getData = (board: boardType) => {
     let data: Array<any> = [];
@@ -163,7 +163,16 @@ function Timeline({ board, updateBoard }: Props) {
           },
         ]}
       />
-      <ModalView key={currNote} selection={selectedNote} showModal={showModal} closeModal={() => {setShowModal(false)}} updateNote={updateNote} initial={currNote} />
+      <ModalView
+        key={currNote}
+        selection={selectedNote}
+        showModal={showModal}
+        closeModal={() => {
+          setShowModal(false);
+        }}
+        updateNote={updateNote}
+        initial={currNote}
+      />
     </div>
   );
 }
